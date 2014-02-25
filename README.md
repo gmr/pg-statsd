@@ -67,31 +67,31 @@ Examples
 	postgres=# SELECT statsd.add_timing('localhost', 8125, 'test-timing1', 70);
 	 add_timing 
 	------------
-	 t
+	
 	(1 row)
 
 	postgres=# SELECT statsd.increment_counter('localhost', 8125, 'test-counter-1');
 	 increment_counter 
 	-------------------
-	 t
+	
 	(1 row)
 
 	postgres=# SELECT statsd.increment_counter('localhost', 8125, 'test-counter-1', 5);
 	 increment_counter 
 	-------------------
-	 t
+	
 	(1 row)
 
 	postgres=# SELECT statsd.increment_counter('localhost', 8125, 'test-counter-1', 5, 0.25);
 	 increment_counter 
 	-------------------
-	 t
+	
 	(1 row)
 
 	postgres=# SELECT statsd.set_gauge('localhost', 8125, 'temperature', 98.7);
 	 set_gauge 
 	-----------
-	 t
+	
 	(1 row)
 
 All methods return bool indicating if the statsd command was able to be sent or not.
