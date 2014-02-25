@@ -5,7 +5,6 @@
    "version": "0.1.0",
    "maintainer": "Gavin M. Roy <gavinr@aweber.com>",
    "license": [ "bsd" ],
-   "status": "alpha",
    "provides": {
      "statsd": {
        "abstract": "statsd client for PostgreSQL",
