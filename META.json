@@ -1,0 +1,23 @@
+{
+   "name": "pg_statsd",
+   "abstract": "statsd client for PostgreSQL",
+   "description": "Add functions to make statsd calls for gaugues, counters, and timers in PostgreSQL",
+   "version": "0.1.0",
+   "maintainer": "Gavin M. Roy <gavinr@aweber.com>",
+   "license": [ "bsd" ],
+   "status": "alpha",
+   "provides": {
+     "statsd": {
+       "abstract": "statsd client for PostgreSQL",
+       "file": "sql/statsd.sql",
+       "version": "0.1.0"
+     }
+   },
+   "meta-spec": {
+      "version": "1.0.0",
+      "url": "http://pgxn.org/meta/spec.txt"
+   },
+   "tags": [
+     "statsd"
+   ]
+}
