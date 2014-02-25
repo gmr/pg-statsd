@@ -56,8 +56,8 @@ Datum pg_statsd_set_gauge_int32(PG_FUNCTION_ARGS);
 /**
  * Create a socket and connect to the statsd server returning the fd
  *
- * @param char *host
- * @param int port
+ * @param FunctionCallInfoData *fcinfo
+ * @param char *output
  * @return int
  */
 static int local_send_metric(FunctionCallInfoData *fcinfo, char *output) {
