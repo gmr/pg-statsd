@@ -63,13 +63,12 @@ Datum pg_statsd_set_gauge_int32(PG_FUNCTION_ARGS);
 static int local_send_metric(FunctionCallInfoData *fcinfo, char *output) {
     struct addrinfo hints, *addr, *addrs;
     int bytes, err, sockfd;
-    char port[10];
-    char ipstr[128];
+    char ipstr[128], servname[10];
 
     // Get host and port
     char *host = DatumGetCString(DirectFunctionCall1(textout, 
                                                      PointerGetDatum(PG_GETARG_TEXT_P(0))));
-    snprintf(port, sizeof(port), "%d", PG_GETARG_INT32(1));
+    snprintf(servname, sizeof(servname), "%d", PG_GETARG_INT32(1));
 
     // Setup hints for getaddrinfo
     memset(&hints, 0, sizeof hints);
@@ -78,7 +77,7 @@ static int local_send_metric(FunctionCallInfoData *fcinfo, char *output) {
     hints.ai_protocol = 0;
 
     // Get possible addresses to send to
-    if ((err = getaddrinfo(host, port, &hints, &addrs)) != 0)
+    if ((err = getaddrinfo(host, servname, &hints, &addrs)) != 0)
     {
         ereport(WARNING,
                 (errcode(ERRCODE_CONNECTION_FAILURE),
@@ -121,7 +120,7 @@ static int local_send_metric(FunctionCallInfoData *fcinfo, char *output) {
 
     ereport(WARNING,
             (errcode(ERRCODE_CONNECTION_FAILURE),
-             errmsg("Could not connect to %s:%s - %s", host, port, strerror(errno))));     
+             errmsg("Could not connect to %s:%s - %s", host, servname, strerror(errno))));     
     return -1;
 }
 
