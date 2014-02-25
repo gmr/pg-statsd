@@ -61,7 +61,7 @@ Datum pg_statsd_set_gauge_int32(PG_FUNCTION_ARGS);
  * @return int
  */
 static int local_send_metric(FunctionCallInfoData *fcinfo, char *output) {
-    struct addrinfo hints, *addr, *addrs;
+    struct addrinfo *addr, *addrs;
     int bytes, err, sockfd;
     char ipstr[128], servname[10];
 
@@ -70,14 +70,12 @@ static int local_send_metric(FunctionCallInfoData *fcinfo, char *output) {
                                                      PointerGetDatum(PG_GETARG_TEXT_P(0))));
     snprintf(servname, sizeof(servname), "%d", PG_GETARG_INT32(1));
 
-    // Setup hints for getaddrinfo
-    memset(&hints, 0, sizeof hints);
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_DGRAM;
-    hints.ai_protocol = 0;
-
     // Get possible addresses to send to
-    if ((err = getaddrinfo(host, servname, &hints, &addrs)) != 0)
+    if ((err = getaddrinfo(host, servname, 
+                           &(struct addrinfo){.ai_family = AF_UNSPEC, 
+                                              .ai_socktype = SOCK_DGRAM, 
+                                              .ai_protocol = 0}, 
+                           &addrs)) != 0)
     {
         ereport(WARNING,
                 (errcode(ERRCODE_CONNECTION_FAILURE),
