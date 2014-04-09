@@ -40,7 +40,7 @@
 #include "postgres.h"
 #include "fmgr.h"
 #include "funcapi.h"
-#include "server/utils/builtins.h"
+#include "utils/builtins.h"
 
 #ifdef PG_MODULE_MAGIC
 PG_MODULE_MAGIC;

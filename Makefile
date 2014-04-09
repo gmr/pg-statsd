@@ -1,6 +1,6 @@
 EXTENSION  = statsd
 
-EXTVERSION   = '0.1.0'
+EXTVERSION   = '0.1.1'
 
 #EXTVERSION   = $(shell grep default_version $(EXTENSION).control | \
 #               sed -e "s/default_version[[:space:]]*=[[:space:]]*'\([^']*\)'/\1/")
