@@ -1,6 +1,6 @@
 # statsd extension
 comment = 'statsd client for PostgreSQL'
-default_version = '0.1.1'
+default_version = '0.1.2'
 module_pathname = '$libdir/pg_statsd'
 relocatable = false
 schema = statsd

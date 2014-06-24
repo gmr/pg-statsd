@@ -1,6 +1,6 @@
 EXTENSION  = statsd
 
-EXTVERSION   = '0.1.1'
+EXTVERSION   = '0.1.2'
 
 #EXTVERSION   = $(shell grep default_version $(EXTENSION).control | \
 #               sed -e "s/default_version[[:space:]]*=[[:space:]]*'\([^']*\)'/\1/")
@@ -26,6 +26,7 @@ sql/$(EXTENSION)--$(EXTVERSION).sql: sql/$(EXTENSION).sql
 # strip first two lines (BEGIN, CREATE SCHEMA) and last line (COMMIT).
 	sed '1,2d;$$d' $< > $@
 
+DATA = $(filter-out sql/$(EXTENSION)--$(EXTVERSION).sql, $(wildcard sql/*--*.sql)) 
 DATA = $(wildcard sql/*--*.sql) sql/$(EXTENSION)--$(EXTVERSION).sql
 EXTRA_CLEAN = sql/$(EXTENSION)--$(EXTVERSION).sql
 endif
