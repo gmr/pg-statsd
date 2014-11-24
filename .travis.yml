@@ -1,11 +1,15 @@
 language: bash
 addons:
   postgresql: "9.3"
+after_script:
+  - psql -c 'DROP EXTENSION statsd' -U postgres
+  - psql -c 'DROP SCHEMA statsd' -U postgres
 before_script:
   - sudo apt-get install -q -y postgresql-server-dev-all postgresql-common nodejs npm screen
   - npm install -q statsd
   - screen -dmS statsd node_modules/statsd/bin/statsd node_modules/statsd/exampleConfig.js
   - make
   - sudo make install
+  - psql -c 'CREATE EXTENSION statsd' -U postgres
 script:
   - bash test.sh
