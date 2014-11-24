@@ -36,7 +36,10 @@ echo "Testing pg-statsd"
 if [ "$TRAVIS" == "true" ]; then
   psql -U postgres -f test.sql -o /dev/null
 else
+  su postgres -c "psql -c 'CREATE EXTENSION statsd'"
   su postgres -c "psql -q -o /dev/null -f test.sql"
+  su postgres -c "psql -c 'DROP EXTENSION statsd'"
+  su postgres -c "psql -c 'DROP SCHEMA statsd'"
 fi
 echo "Getting results"
 
