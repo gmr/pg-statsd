@@ -5,6 +5,7 @@ before_script:
   - sudo apt-get install -q -y postgresql-server-dev-all postgresql-common nodejs npm screen
   - npm install -q statsd
   - screen -dmS statsd node_modules/statsd/bin/statsd node_modules/statsd/exampleConfig.js
-  - sudo make install
 script:
-    - bash test.sh
+  - bash sudo make
+  - bash sudo make install
+  - bash test.sh
