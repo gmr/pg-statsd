@@ -1,2 +1,5 @@
 *.o
 *.so
+node_modules
+.vagrant
+sql/statsd--*.sql
