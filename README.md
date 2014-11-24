@@ -1,9 +1,9 @@
-pg_statsd
+pg-statsd
 =========
-pg_statsd is a set of PostgreSQL user-defined functions that provide
+pg-statsd is a set of PostgreSQL user-defined functions that provide
 and interface to statsd.
 
-[![Build Status](https://travis-ci.org/aweber/pg_statsd.svg?branch=master)](https://travis-ci.org/aweber/pg_statsd)
+[![Build Status](https://travis-ci.org/aweber/pg_statsd.svg?branch=master)](https://travis-ci.org/aweber/pg-statsd)
 
 Requirements
 ------------
@@ -11,11 +11,15 @@ PostgreSQL
 
 Installation
 ------------
-pg_statsd is available for installation from pgxn: http://pgxn.org
+pg-statsd is available for installation from pgxn: http://pgxn.org. Using the pgxn client:
+
+```bash
+pgxn install statsd
+```
 
 Building
 --------
-To build pg_statsd, simply:
+To build pg-statsd, simply:
 
 	make
 	make install
@@ -23,30 +27,32 @@ To build pg_statsd, simply:
 Loading
 -------
 
-Once statsd is installed, you can add it to a database. Add this line to your
-postgresql config
-
-    shared_preload_libraries = 'pg_statsd.so'
-
-Then, If you're running PostgreSQL 9.1.0 or greater, loading statsd is as simple
+If you're running PostgreSQL 9.1.0 or greater, loading pg-statsd is as simple
 as connecting to a database as a super user and running:
 
+```sql
     CREATE EXTENSION statsd;
+```
 
-If you've upgraded your cluster to PostgreSQL 9.1 and already had statsd
+If you've upgraded your cluster to PostgreSQL 9.1 and already had pg-statsd
 installed, you can upgrade it to a properly packaged extension with:
 
+```sql
     CREATE EXTENSION statsd FROM unpackaged;
+```
 
 For versions of PostgreSQL less than 9.1.0, you'll need to run the
 installation script:
 
+```bash
     psql -d mydb -f /path/to/pgsql/share/contrib/statsd.sql
+```
 
 Functions
 ---------
 The following functions are available for use.
 
+```sql
 	# Add a timing value for the specified metric in milliseconds
 	statsd.add_timing(hostname::text, port::int4, metric::text, value::int4)
 
@@ -62,10 +68,12 @@ The following functions are available for use.
 	# Set a gauge value for the specified metric
 	statsd.set_gauge(hostname::text, port::int4, metric::text, value::float8)
 	statsd.set_gauge(hostname::text, port::int4, metric::text, value::int4)
+```
 
 Examples
 --------
 
+```sql
 	postgres=# SELECT statsd.add_timing('localhost', 8125, 'test-timing1', 70);
 	 add_timing
 	------------
@@ -95,8 +103,7 @@ Examples
 	-----------
 
 	(1 row)
-
-All methods return bool indicating if the statsd command was able to be sent or not.
+```sql
 
 License
 -------
