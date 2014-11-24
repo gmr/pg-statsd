@@ -2,6 +2,7 @@ language: bash
 addons:
   postgresql: "9.3"
 before_script:
-  make && make install
+  - sudo apt-get install -q -y postgresql-server-dev-all postgresql-common
+  - make && make install
 script:
     - bash test.sh

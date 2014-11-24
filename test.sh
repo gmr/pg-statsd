@@ -41,7 +41,7 @@ assertContains "Counters: " "'test-counter-1': 7" "$RESULT"
 CONTAINERS=$?
 
 RESULT=`echo gauges | nc localhost 8126 | grep -v 'END'`
-assertContains "Gauges: " "'test-gauge': 98," "$RESULT"
+assertContains "Gauges: " "'test-gauge': 98" "$RESULT"
 GAUGES=$?
 
 RESULT=`echo timers | nc localhost 8126 | grep -v 'END'`
