@@ -33,7 +33,11 @@ assertEqual()
 }
 
 echo "Testing pg-statsd"
-su postgres -c "psql -q -o /dev/null < test.sql"
+if [ "$TRAVIS" == "true" ]; then
+  psql -U postgres -f test.sql -o /dev/null
+else
+  su postgres -c "psql -q -o /dev/null -f test.sql"
+fi
 echo "Getting results"
 
 RESULT=`echo counters | nc localhost 8126 | grep -v 'END'`
