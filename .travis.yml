@@ -3,6 +3,6 @@ addons:
   postgresql: "9.3"
 before_script:
   - sudo apt-get install -q -y postgresql-server-dev-all postgresql-common
-  - make && make install
+  - sudo make install
 script:
     - bash test.sh
