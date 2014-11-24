@@ -103,7 +103,7 @@ Examples
 	-----------
 
 	(1 row)
-```sql
+```
 
 License
 -------

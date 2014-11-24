@@ -103,7 +103,7 @@ set_gauge
 -----------
 
 (1 row)
-```sql
+```
 
 License
 -------
