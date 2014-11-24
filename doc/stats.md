@@ -3,8 +3,6 @@ pg-statsd
 pg-statsd is a set of PostgreSQL user-defined functions that provide
 and interface to statsd.
 
-[![Build Status](https://travis-ci.org/aweber/pg_statsd.svg?branch=master)](https://travis-ci.org/aweber/pg-statsd)
-
 Requirements
 ------------
 PostgreSQL
