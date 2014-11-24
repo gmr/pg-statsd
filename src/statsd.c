@@ -12,8 +12,8 @@
  *       copyright notice, this list of conditions and the following
  *       disclaimer in the documentation and/or other materials provided
  *       with the distribution.
- *     * Neither the name pg_statsd nor the names of its contributors may 
- *       be used to endorse or promote products derived from this software 
+ *     * Neither the name pg-statsd nor the names of its contributors may
+ *       be used to endorse or promote products derived from this software
  *       without specific prior written
  *       permission.
  *
@@ -44,14 +44,14 @@
 
 #ifdef PG_MODULE_MAGIC
 PG_MODULE_MAGIC;
-#endif 
+#endif
 
-Datum pg_statsd_add_timing(PG_FUNCTION_ARGS);
-Datum pg_statsd_increment_counter(PG_FUNCTION_ARGS);
-Datum pg_statsd_increment_sampled_counter(PG_FUNCTION_ARGS);
-Datum pg_statsd_increment_counter_with_value(PG_FUNCTION_ARGS);
-Datum pg_statsd_set_gauge_float8(PG_FUNCTION_ARGS);
-Datum pg_statsd_set_gauge_int32(PG_FUNCTION_ARGS);
+Datum statsd_add_timing(PG_FUNCTION_ARGS);
+Datum statsd_increment_counter(PG_FUNCTION_ARGS);
+Datum statsd_increment_sampled_counter(PG_FUNCTION_ARGS);
+Datum statsd_increment_counter_with_value(PG_FUNCTION_ARGS);
+Datum statsd_set_gauge_float8(PG_FUNCTION_ARGS);
+Datum statsd_set_gauge_int32(PG_FUNCTION_ARGS);
 
 /**
  * Create a socket and connect to the statsd server returning the fd
@@ -66,20 +66,20 @@ static int local_send_metric(FunctionCallInfoData *fcinfo, char *output) {
     char ipstr[128], servname[10];
 
     // Get host and port
-    char *host = DatumGetCString(DirectFunctionCall1(textout, 
+    char *host = DatumGetCString(DirectFunctionCall1(textout,
                                                      PointerGetDatum(PG_GETARG_TEXT_P(0))));
     snprintf(servname, sizeof(servname), "%d", PG_GETARG_INT32(1));
 
     // Get possible addresses to send to
-    if ((err = getaddrinfo(host, servname, 
-                           &(struct addrinfo){.ai_family = AF_UNSPEC, 
-                                              .ai_socktype = SOCK_DGRAM, 
-                                              .ai_protocol = 0}, 
+    if ((err = getaddrinfo(host, servname,
+                           &(struct addrinfo){.ai_family = AF_UNSPEC,
+                                              .ai_socktype = SOCK_DGRAM,
+                                              .ai_protocol = 0},
                            &addrs)) != 0)
     {
         ereport(WARNING,
                 (errcode(ERRCODE_CONNECTION_FAILURE),
-                 errmsg("getaddrinfo(%s): %s", host, gai_strerror(err))));          
+                 errmsg("getaddrinfo(%s): %s", host, gai_strerror(err))));
         return -1;
     }
 
@@ -91,7 +91,7 @@ static int local_send_metric(FunctionCallInfoData *fcinfo, char *output) {
         if (sockfd == -1) {
             ereport(WARNING,
                     (errcode(ERRCODE_CONNECTION_FAILURE),
-                     errmsg("Error: %s", strerror(errno))));  
+                     errmsg("Error: %s", strerror(errno))));
             continue;
         }
 
@@ -111,14 +111,14 @@ static int local_send_metric(FunctionCallInfoData *fcinfo, char *output) {
                 inet_ntop(AF_INET6, &(((struct sockaddr_in6 *)addr)->sin6_addr), ipstr, sizeof(ipstr));
                 break;
         }
-        ereport(INFO, 
+        ereport(INFO,
                 (errcode(ERRCODE_CONNECTION_FAILURE),
-                 errmsg("%s Error: %s", ipstr, strerror(errno))));   
+                 errmsg("%s Error: %s", ipstr, strerror(errno))));
     }
 
     ereport(WARNING,
             (errcode(ERRCODE_CONNECTION_FAILURE),
-             errmsg("Could not connect to %s:%s - %s", host, servname, strerror(errno))));     
+             errmsg("Could not connect to %s:%s - %s", host, servname, strerror(errno))));
     return -1;
 }
 
@@ -129,13 +129,13 @@ static int local_send_metric(FunctionCallInfoData *fcinfo, char *output) {
  * @param int4 port
  * @param text metric
  * @param int value
- */ 
-PG_FUNCTION_INFO_V1(pg_statsd_add_timing);
-Datum 
-pg_statsd_add_timing(PG_FUNCTION_ARGS){    
+ */
+PG_FUNCTION_INFO_V1(statsd_add_timing);
+Datum
+statsd_add_timing(PG_FUNCTION_ARGS){
     if (!PG_ARGISNULL(0)) {
         // Get the metric name
-        char *metric = DatumGetCString(DirectFunctionCall1(textout, 
+        char *metric = DatumGetCString(DirectFunctionCall1(textout,
                                                            PointerGetDatum(PG_GETARG_TEXT_P(2))));
 
         // Build the statsd command to send
@@ -144,7 +144,7 @@ pg_statsd_add_timing(PG_FUNCTION_ARGS){
         snprintf(output, size, "%s:%i|ms", metric, PG_GETARG_INT32(3));
 
         // Write to statsd and free the output
-        local_send_metric(fcinfo, output); 
+        local_send_metric(fcinfo, output);
         pfree(output);
     }
     PG_RETURN_VOID();
@@ -156,13 +156,13 @@ pg_statsd_add_timing(PG_FUNCTION_ARGS){
  * @param text hostname
  * @param int4 port
  * @param text metric
- */ 
-PG_FUNCTION_INFO_V1(pg_statsd_increment_counter);
+ */
+PG_FUNCTION_INFO_V1(statsd_increment_counter);
 Datum
-pg_statsd_increment_counter(PG_FUNCTION_ARGS){    
+statsd_increment_counter(PG_FUNCTION_ARGS){
     if (!PG_ARGISNULL(0)) {
         // Get the metric name
-        char *metric = DatumGetCString(DirectFunctionCall1(textout, 
+        char *metric = DatumGetCString(DirectFunctionCall1(textout,
                                                            PointerGetDatum(PG_GETARG_TEXT_P(2))));
 
         // Build the statsd command to send
@@ -171,7 +171,7 @@ pg_statsd_increment_counter(PG_FUNCTION_ARGS){
         snprintf(output, size, "%s:1|c", metric);
 
         // Write to statsd and free the output
-        local_send_metric(fcinfo, output); 
+        local_send_metric(fcinfo, output);
         pfree(output);
     }
     PG_RETURN_VOID();
@@ -184,13 +184,13 @@ pg_statsd_increment_counter(PG_FUNCTION_ARGS){
  * @param int4 port
  * @param text metric
  * @param int4 value
- */ 
-PG_FUNCTION_INFO_V1(pg_statsd_increment_counter_with_value);
-Datum 
-pg_statsd_increment_counter_with_value(PG_FUNCTION_ARGS){    
+ */
+PG_FUNCTION_INFO_V1(statsd_increment_counter_with_value);
+Datum
+statsd_increment_counter_with_value(PG_FUNCTION_ARGS){
     if (!PG_ARGISNULL(0)) {
         // Get the metric name
-        char *metric = DatumGetCString(DirectFunctionCall1(textout, 
+        char *metric = DatumGetCString(DirectFunctionCall1(textout,
                                                            PointerGetDatum(PG_GETARG_TEXT_P(2))));
 
         // Build the statsd command to send
@@ -199,7 +199,7 @@ pg_statsd_increment_counter_with_value(PG_FUNCTION_ARGS){
         snprintf(output, size, "%s:%i|c", metric, PG_GETARG_INT32(3));
 
         // Write to statsd and free the output
-        local_send_metric(fcinfo, output); 
+        local_send_metric(fcinfo, output);
         pfree(output);
     }
     PG_RETURN_VOID();
@@ -213,13 +213,13 @@ pg_statsd_increment_counter_with_value(PG_FUNCTION_ARGS){
  * @param text metric
  * @param int4 value
  * @param float8 sample
- */ 
-PG_FUNCTION_INFO_V1(pg_statsd_increment_sampled_counter);
+ */
+PG_FUNCTION_INFO_V1(statsd_increment_sampled_counter);
 Datum
-pg_statsd_increment_sampled_counter(PG_FUNCTION_ARGS){    
+statsd_increment_sampled_counter(PG_FUNCTION_ARGS){
     if (!PG_ARGISNULL(0)) {
         // Get the metric name
-        char *metric = DatumGetCString(DirectFunctionCall1(textout, 
+        char *metric = DatumGetCString(DirectFunctionCall1(textout,
                                                            PointerGetDatum(PG_GETARG_TEXT_P(2))));
 
         // Build the statsd command to send
@@ -228,7 +228,7 @@ pg_statsd_increment_sampled_counter(PG_FUNCTION_ARGS){
         snprintf(output, size, "%s:%d|c|@%f", metric, PG_GETARG_INT32(3), PG_GETARG_FLOAT8(4));
 
         // Write to statsd and free the output
-        local_send_metric(fcinfo, output); 
+        local_send_metric(fcinfo, output);
         pfree(output);
     }
     PG_RETURN_VOID();
@@ -241,13 +241,13 @@ pg_statsd_increment_sampled_counter(PG_FUNCTION_ARGS){
  * @param int4 port
  * @param text metric
  * @param float8 value
- */ 
-PG_FUNCTION_INFO_V1(pg_statsd_set_gauge_float8);
+ */
+PG_FUNCTION_INFO_V1(statsd_set_gauge_float8);
 Datum
-pg_statsd_set_gauge_float8(PG_FUNCTION_ARGS){    
+statsd_set_gauge_float8(PG_FUNCTION_ARGS){
     if (!PG_ARGISNULL(0)) {
         // Get the metric name
-        char *metric = DatumGetCString(DirectFunctionCall1(textout, 
+        char *metric = DatumGetCString(DirectFunctionCall1(textout,
                                                            PointerGetDatum(PG_GETARG_TEXT_P(2))));
 
         // Build the statsd command to send
@@ -256,7 +256,7 @@ pg_statsd_set_gauge_float8(PG_FUNCTION_ARGS){
         snprintf(output, size, "%s:%f|g", metric, PG_GETARG_FLOAT8(3));
 
         // Write to statsd and free the output
-        local_send_metric(fcinfo, output); 
+        local_send_metric(fcinfo, output);
         pfree(output);
     }
     PG_RETURN_VOID();
@@ -269,13 +269,13 @@ pg_statsd_set_gauge_float8(PG_FUNCTION_ARGS){
  * @param int4 port
  * @param text metric
  * @param int4 value
- */ 
-PG_FUNCTION_INFO_V1(pg_statsd_set_gauge_int32);
+ */
+PG_FUNCTION_INFO_V1(statsd_set_gauge_int32);
 Datum
-pg_statsd_set_gauge_int32(PG_FUNCTION_ARGS){    
+statsd_set_gauge_int32(PG_FUNCTION_ARGS){
     if (!PG_ARGISNULL(0)) {
         // Get the metric name
-        char *metric = DatumGetCString(DirectFunctionCall1(textout, 
+        char *metric = DatumGetCString(DirectFunctionCall1(textout,
                                                            PointerGetDatum(PG_GETARG_TEXT_P(2))));
 
         // Build the statsd command to send
@@ -284,7 +284,7 @@ pg_statsd_set_gauge_int32(PG_FUNCTION_ARGS){
         snprintf(output, size, "%s:%i|g", metric, PG_GETARG_INT32(3));
 
         // Write to statsd and free the output
-        local_send_metric(fcinfo, output); 
+        local_send_metric(fcinfo, output);
         pfree(output);
     }
     PG_RETURN_VOID();

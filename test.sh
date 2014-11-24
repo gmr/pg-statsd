@@ -32,7 +32,7 @@ assertEqual()
   return 0
 }
 
-echo "Testing pg_statsd"
+echo "Testing pg-statsd"
 su postgres -c "psql -q -o /dev/null < test.sql"
 echo "Getting results"
 

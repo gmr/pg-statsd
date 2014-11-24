@@ -2,7 +2,9 @@ language: bash
 addons:
   postgresql: "9.3"
 before_script:
-  - sudo apt-get install -q -y postgresql-server-dev-all postgresql-common
+  - sudo apt-get install -q -y postgresql-server-dev-all postgresql-common node npm
+  - npm install -q statsd
+  - screen -dmS statsd node_modules/statsd/bin/statsd node_modules/statsd/exampleConfig.js
   - sudo make install
 script:
     - bash test.sh

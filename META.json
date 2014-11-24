@@ -1,15 +1,33 @@
 {
-   "name": "pg_statsd",
+   "name": "statsd",
    "abstract": "statsd client for PostgreSQL",
    "description": "Add functions to make statsd calls for gaugues, counters, and timers in PostgreSQL",
-   "version": "0.1.4",
+   "version": "0.2.0",
    "maintainer": "Gavin M. Roy <gavinr@aweber.com>",
    "license": [ "bsd" ],
    "provides": {
      "statsd": {
        "abstract": "statsd client for PostgreSQL",
        "file": "sql/statsd.sql",
-       "version": "0.1.4"
+       "version": "0.2.0"
+     }
+   },
+   "prereqs": {
+     "runtime": {
+       "requires": {
+         "PostgreSQL": "9.0.0"
+       }
+     }
+   },
+   "generated_by": "Gavin M. Roy",
+   "resources": {
+     "bugtracker": {
+       "web": "https://github.com/AWeber/pg-statsd/issues/"
+     },
+     "repository": {
+       "url":  "git://github.com/AWeber/pg-statsd.git",
+       "web":  "https://github.com/AWeber/pg-statsd/",
+       "type": "git"
      }
    },
    "meta-spec": {
