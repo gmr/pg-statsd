@@ -28,3 +28,8 @@ all: sql/$(EXTENSION)--$(EXTVERSION).sql
 sql/$(EXTENSION)--$(EXTVERSION).sql: sql/$(EXTENSION).sql
 	cp $< $@
 endif
+
+clean:
+	rm -f pg_statsd.so src/pg_statsd.so
+	rm sql/*--*.sql
+	rm -rf node_modules
