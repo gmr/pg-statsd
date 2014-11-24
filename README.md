@@ -3,6 +3,8 @@ pg_statsd
 pg_statsd is a set of PostgreSQL user-defined functions that provide
 and interface to statsd.
 
+[![Build Status](https://travis-ci.org/aweber/pg_statsd.svg?branch=master)](https://travis-ci.org/aweber/pg_statsd)
+
 Requirements
 ------------
 PostgreSQL
@@ -65,33 +67,33 @@ Examples
 --------
 
 	postgres=# SELECT statsd.add_timing('localhost', 8125, 'test-timing1', 70);
-	 add_timing 
+	 add_timing
 	------------
-	
+
 	(1 row)
 
 	postgres=# SELECT statsd.increment_counter('localhost', 8125, 'test-counter-1');
-	 increment_counter 
+	 increment_counter
 	-------------------
-	
+
 	(1 row)
 
 	postgres=# SELECT statsd.increment_counter('localhost', 8125, 'test-counter-1', 5);
-	 increment_counter 
+	 increment_counter
 	-------------------
-	
+
 	(1 row)
 
 	postgres=# SELECT statsd.increment_counter('localhost', 8125, 'test-counter-1', 5, 0.25);
-	 increment_counter 
+	 increment_counter
 	-------------------
-	
+
 	(1 row)
 
 	postgres=# SELECT statsd.set_gauge('localhost', 8125, 'temperature', 98.7);
-	 set_gauge 
+	 set_gauge
 	-----------
-	
+
 	(1 row)
 
 All methods return bool indicating if the statsd command was able to be sent or not.
@@ -100,22 +102,22 @@ License
 -------
 Copyright (c) 2014, AWeber Communications.
 All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
- 
+
 * Redistributions of source code must retain the above copyright
   notice, this list of conditions and the following disclaimer.
 * Redistributions in binary form must reproduce the above
   copyright notice, this list of conditions and the following
   disclaimer in the documentation and/or other materials provided
   with the distribution.
-* Neither the name pg_statsd nor the names of its contributors may 
-  be used to endorse or promote products derived from this software 
+* Neither the name pg_statsd nor the names of its contributors may
+  be used to endorse or promote products derived from this software
   without specific prior written
   permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
